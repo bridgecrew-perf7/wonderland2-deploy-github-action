@@ -14,7 +14,7 @@ A GitHub action to deploy services to Wonderland2
   with:
     token: ${{ secrets.WONDERLAND_GITHUB_TOKEN }}
     bastion_key: ${{ secrets.BASTION_KEY }}
-    workspace: stage
+    workspace: prod
     wonderland_manifest: wonderland2.yaml
 ```
 
@@ -24,9 +24,9 @@ A GitHub action to deploy services to Wonderland2
 
 The Wonderland 2 manifest file (default: **wonderland2.yaml**)
 
-### workspace
+### workspace (Wonderland team internal use only)
 
-The workspace to deploy your application (prod/stage) (default: **stage**)
+The workspace to deploy your application (prod/stage) (default: **prod**)
 
 ### bastion_key
 
