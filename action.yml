@@ -15,7 +15,7 @@ inputs:
   workspace:
     description: 'The workspace to deploy your application (prod/stage)'
     required: true
-    default: 'stage'
+    default: 'prod'
   wonderland_manifest:
     description: 'The Wonderland 2 manifest file'
     required: true
