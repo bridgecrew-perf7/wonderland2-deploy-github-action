@@ -20,6 +20,10 @@ echo "$2" > /root/.ssh/id_rsa
 chmod 600 /root/.ssh/id_rsa
 echo "StrictHostKeyChecking no" > /root/.ssh/config
 
-log "Deploying application to Wonderland 2"
+service_name=$(yq read "$4" metadata.name)
+
+log "Deploying $service_name to Wonderland 2"
 wl --workspace="$3" kubectl apply -f "$4"
-log "Deployment finished"
+log "Waiting for service to become available"
+wl kubectl rollout status deploy "$service_name"
+log "Deployed $service_name to Wonderland 2 successfully"
