@@ -1,5 +1,5 @@
 FROM alpine:latest
-RUN apk add curl openssh-client bash
+RUN apk add curl openssh-client bash yq
 
 RUN curl -sSLfo /usr/local/bin/wl https://downloads.jimdo-platform.net/wl/latest/wl_linux_amd64 && chmod +x /usr/local/bin/wl
 
