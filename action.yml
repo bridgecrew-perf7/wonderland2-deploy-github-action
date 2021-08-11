@@ -7,18 +7,14 @@ inputs:
   token:
     description: 'A GitHub token to use with wonderland'
     required: true
-    default: ''
   bastion_key:
     description: 'Ssh key for authentication in the bastion host'
     required: true
-    default: ''
   workspace:
-    description: 'The workspace to deploy your application (prod/stage)'
-    required: true
+    description: 'The wonderland workspace to deploy your application to (prod/stage)'
     default: 'prod'
   wonderland_manifest:
     description: 'The Wonderland 2 manifest file'
-    required: true
     default: 'wonderland2.yaml'
 runs:
   using: 'docker'
