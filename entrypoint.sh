@@ -6,7 +6,7 @@ function log() {
     echo "$(date -u) $*"
 }
 
-if [ $# -lt 4 ]; then
+if [ $# -lt 5 ]; then
     log "Not enough arguments"
     exit 1
 fi
@@ -25,7 +25,7 @@ service_name=$(yq eval '.metadata.name' "$4")
 log "Deploying $service_name to Wonderland 2"
 wl --workspace="$3" kubectl apply -f "$4"
 log "Waiting for service to become available"
-wl kubectl rollout status deploy "$service_name"
+wl kubectl rollout status deploy "$service_name" --timeout="$5"
 log "Deployed $service_name to Wonderland 2 successfully"
 log "Getting service status"
 wl kubectl get ws "$service_name"
