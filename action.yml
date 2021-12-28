@@ -11,11 +11,17 @@ inputs:
     description: 'Ssh key for authentication in the bastion host'
     required: true
   workspace:
+    required: false
     description: 'The wonderland workspace to deploy your application to (prod/stage)'
     default: 'prod'
   wonderland_manifest:
+    required: false
     description: 'The Wonderland 2 manifest file'
     default: 'wonderland2.yaml'
+  timeout:
+    required: false
+    description: 'Maximum time to wait for the deployment to become available'
+    default: '5m'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -24,3 +30,4 @@ runs:
     - ${{ inputs.bastion_key }}
     - ${{ inputs.workspace }}
     - ${{ inputs.wonderland_manifest }}
+    - ${{ inputs.timeout }}

@@ -15,9 +15,14 @@ A GitHub action to deploy services to Wonderland2
     token: ${{ secrets.WONDERLAND_GITHUB_TOKEN }}
     bastion_key: ${{ secrets.BASTION_KEY }}
     wonderland_manifest: wonderland2.yaml
+    timeout: 45s
 ```
 
 ## Inputs
+
+### timeout
+
+Maximum time to wait for the deployment to become available (default: **5m**)
 
 ### wonderland_manifest
 
