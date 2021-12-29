@@ -12,8 +12,8 @@ A GitHub action to deploy services to Wonderland2
 - name: Deploy to Wonderland 2
   uses: Jimdo/wonderland2-deploy-github-action@main
   with:
-    token: ${{ secrets.WONDERLAND_GITHUB_TOKEN }}
-    bastion_key: ${{ secrets.BASTION_KEY }}
+    token: ${{ secrets.WONDERLAND_CI_GITHUB_TOKEN }}
+    bastion_key: ${{ secrets.WONDERLAND_CI_SSH_KEY }}
     wonderland_manifest: wonderland2.yaml
     timeout: 45s
 ```
