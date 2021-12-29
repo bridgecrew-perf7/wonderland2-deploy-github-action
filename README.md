@@ -1,6 +1,6 @@
 # wonderland2-deploy-github-action
 
-A GitHub action to deploy services to Wonderland2
+A GitHub action to deploy or delete services to Wonderland2
 
 ## How to use it
 
@@ -35,3 +35,7 @@ The Wonderland 2 manifest file (default: **wonderland2.yaml**)
 ### token
 
 **required** A GitHub token to use with wonderland (`secrets.WONDERLAND_GITHUB_TOKEN`)
+
+### delete
+
+set this to `"true"` if you intend to delete the service instead of deploying it 
