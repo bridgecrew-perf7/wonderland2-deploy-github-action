@@ -22,6 +22,10 @@ inputs:
     required: false
     description: 'Maximum time to wait for the deployment to become available'
     default: '5m'
+  delete:
+    required: false
+    description: 'Delete the service instead of deploying it'
+    default: 'false'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -31,3 +35,4 @@ runs:
     - ${{ inputs.workspace }}
     - ${{ inputs.wonderland_manifest }}
     - ${{ inputs.timeout }}
+    - ${{ inputs.delete }}
