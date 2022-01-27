@@ -6,6 +6,8 @@ function log() {
   echo "$(date -u) $*"
 }
 
+trap 'log "There was a problem. Please take a look at https://backstage.jimdex.net/docs/default/component/wonderland2-k8s-operator/How-To/Debug/ for troubleshooting"' ERR
+
 if [ $# -lt 6 ]; then
   log "Not enough arguments"
   exit 1
