@@ -21,7 +21,7 @@ inputs:
   timeout:
     required: false
     description: 'Maximum time to wait for the deployment to become available'
-    default: '5m'
+    default: '10m'
   delete:
     required: false
     description: 'Delete the service instead of deploying it'
