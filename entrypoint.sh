@@ -6,7 +6,7 @@ function log() {
   echo "$(date -u) $*"
 }
 
-trap 'log "There was a problem. Please take a look at https://backstage.jimdex.net/docs/default/component/wonderland2-k8s-operator/How-To/Debug/ for troubleshooting"' ERR
+trap 'rc=$?; log "$rc: There was a problem. Please take a look at https://backstage.jimdex.net/docs/default/component/wonderland2-k8s-operator/How-To/Debug/ for troubleshooting"; exit $rc' ERR
 
 if [ $# -lt 6 ]; then
   log "Not enough arguments"
