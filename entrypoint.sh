@@ -8,6 +8,16 @@ environment="$3"
 wonderland_manifest="$4"
 timeout="$5"
 delete="$6"
+workspace="$7"
+
+if [ "$workspace" != "prod" ]; then
+    echo "Warning: 'workspace' parameter is deprecated please use 'environment' instead" >&2
+    if [ "$environment" != "prod"]; then
+        echo "Error: You can either use 'workspace' ($workspace) or 'environment' ($workspace) not both!" >&2
+        exit 1
+    fi
+    environment="$workspace"
+fi
 
 function log() {
   echo "$(date -u) $*"
@@ -15,7 +25,7 @@ function log() {
 
 trap 'rc=$?; log "$rc: There was a problem. Please take a look at https://backstage.jimdex.net/docs/default/component/wonderland2-k8s-operator/How-To/Debug/ for troubleshooting"; exit $rc' ERR
 
-if [ $# -lt 6 ]; then
+if [ $# -lt 7 ]; then
   log "Not enough arguments"
   exit 1
 fi
