@@ -20,6 +20,7 @@ release][htr]*
     token: ${{ secrets.WONDERLAND_CI_GITHUB_TOKEN }}
     bastion_key: ${{ secrets.WONDERLAND_CI_SSH_KEY }}
     wonderland_manifest: wonderland2.yaml
+    environment: stage
     timeout: 45s
 ```
 
@@ -32,6 +33,11 @@ Maximum time to wait for the deployment to become available (default: **5m**)
 ### wonderland_manifest
 
 The Wonderland 2 manifest file (default: **wonderland2.yaml**)
+
+### environment
+
+The Wonderland 2 environment in which the service should be deployed.
+Currently `stage` or `prod`.
 
 ### bastion_key
 
