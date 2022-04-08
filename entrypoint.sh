@@ -32,7 +32,7 @@ fi
 
 echo "::debug::Downloading the WL2 CLI"
 dl_uri="$(curl --silent --fail --show-error -H "Authorization: token $1" "https://api.github.com/repos/Jimdo/wonderland2-cli/releases/latest" | jq '.assets[] | select(.name == "wl2-linux-amd64") | .url' -r)"
-curl --silent --fail --show-error --output /usr/local/bin/wl2 -H "Authorization: token $1" -H 'Accept:application/octet-stream' "$dl_uri"
+curl -L --silent --fail --show-error --output /usr/local/bin/wl2 -H "Authorization: token $1" -H 'Accept:application/octet-stream' "$dl_uri"
 chmod +x /usr/local/bin/wl2
 
 log "Setting WONDERLAND_GITHUB_TOKEN"
