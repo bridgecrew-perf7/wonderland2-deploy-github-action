@@ -30,6 +30,11 @@ if [ $# -lt 7 ]; then
   exit 1
 fi
 
+echo "::debug::Downloading the WL2 CLI"
+dl_uri="$(curl --silent --fail --show-error -H "Authorization: token $1" "https://api.github.com/repos/Jimdo/wonderland2-cli/releases/latest" | jq '.assets[] | select(.name == "wl2-linux-amd64") | .url' -r)"
+curl --silent --fail --show-error --output /usr/local/bin/wl2 -H "Authorization: token $1" -H 'Accept:application/octet-stream' "$dl_uri"
+chmod +x /usr/local/bin/wl2
+
 log "Setting WONDERLAND_GITHUB_TOKEN"
 export WONDERLAND_GITHUB_TOKEN="$1"
 
@@ -43,21 +48,21 @@ service_name=$(yq eval '.metadata.name' "$4")
 
 if $delete == "true"; then
   log "Deleting $service_name from Wonderland 2"
-  wl --environment="$environment" kubectl delete -f "$wonderland_manifest"
+  wl2 --environment="$environment" kubectl delete -f "$wonderland_manifest"
 else
   log "Deploying $service_name to Wonderland 2"
-  wl --environment="$environment" kubectl apply -f "$wonderland_manifest"
+  wl2 --environment="$environment" kubectl apply -f "$wonderland_manifest"
   log "Waiting for service to become available"
   WAIT_TIME=0
-  until [ $WAIT_TIME -lt 10 ] || wl --environment="$environment" kubectl get deployment "$service_name" 2>/dev/null; do
+  until [ $WAIT_TIME -lt 10 ] || wl2 --environment="$environment" kubectl get deployment "$service_name" 2>/dev/null; do
     sleep $((WAIT_TIME ++))
     log "waiting ${WAIT_TIME}s for deployment to become available"
   done
   if [ "$WAIT_TIME" -lt 10 ]; then
-    wl --environment="$environment" kubectl rollout status deploy "$service_name" --timeout="$timeout"
+    wl2 --environment="$environment" kubectl rollout status deploy "$service_name" --timeout="$timeout"
     log "Deployed $service_name to Wonderland 2 successfully"
     log "Getting service status"
-    wl --environment="$environment" kubectl get ws "$service_name"
+    wl2 --environment="$environment" kubectl get ws "$service_name"
   else
     log "Failed to get deployment for service $service_name"
     exit 1
