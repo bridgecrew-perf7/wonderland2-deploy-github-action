@@ -9,10 +9,11 @@ wonderland_manifest="$4"
 timeout="$5"
 delete="$6"
 workspace="$7"
+cli_version="$8"
 
 if [ "$workspace" != "prod" ]; then
     echo "Warning: 'workspace' parameter is deprecated please use 'environment' instead" >&2
-    if [ "$environment" != "prod"]; then
+    if [ "$environment" != "prod" ]; then
         echo "Error: You can either use 'workspace' ($workspace) or 'environment' ($workspace) not both!" >&2
         exit 1
     fi
@@ -25,13 +26,13 @@ function log() {
 
 trap 'rc=$?; log "$rc: There was a problem. Please take a look at https://backstage.jimdex.net/docs/default/component/wonderland2-k8s-operator/How-To/Debug/ for troubleshooting"; exit $rc' ERR
 
-if [ $# -lt 7 ]; then
+if [ $# -lt 8 ]; then
   log "Not enough arguments"
   exit 1
 fi
 
 echo "::debug::Downloading the WL2 CLI"
-dl_uri="$(curl --silent --fail --show-error -H "Authorization: token $1" "https://api.github.com/repos/Jimdo/wonderland2-cli/releases/latest" | jq '.assets[] | select(.name == "wl2-linux-amd64") | .url' -r)"
+dl_uri="$(curl --silent --fail --show-error -H "Authorization: token $1" "https://api.github.com/repos/Jimdo/wonderland2-cli/releases/tags/$cli_version" | jq '.assets[] | select(.name == "wl2-linux-amd64") | .url' -r)"
 curl -L --silent --fail --show-error --output /usr/local/bin/wl2 -H "Authorization: token $1" -H 'Accept:application/octet-stream' "$dl_uri"
 chmod +x /usr/local/bin/wl2
 
