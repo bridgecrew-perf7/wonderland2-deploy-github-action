@@ -1,0 +1,54 @@
+on:
+  push:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test_e2e:
+    runs-on: ubuntu-latest
+    concurrency: dummy-deployment
+    steps:
+    - uses: actions/checkout@v1
+    - name: Get credentials
+      uses: hashicorp/vault-action@v2.4.0
+      with:
+        url: https://vault.jimdo-platform.net
+        method: jwt
+        role: github_jimdo
+        secrets: |
+          secret/github/jimdo-bot GITHUB_TOKEN ;
+          secret/github/jimdo-bot SSH_KEY ;
+    - name: Test Action (default CLI release)
+      uses: ./
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        bastion_key: ${{ env.SSH_KEY }}
+        wonderland_manifest: dummy-deployment.yaml
+        environment: stage
+        timeout: 45s
+    - name: Test Action (specified invalid CLI release)
+      uses: ./
+      id: invalidver
+      continue-on-error: true
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        bastion_key: ${{ env.SSH_KEY }}
+        wonderland_manifest: dummy-deployment.yaml
+        environment: stage
+        timeout: 45s
+        cli_version: v0.999999.999999
+    - name: Ensure the action failed with the invalid release
+      if: always()
+      run: '[[ "${{ steps.invalidver.outcome }}" == "failure" ]]'
+    - name: Test Action (delete service)
+      if: always()
+      uses: ./
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        bastion_key: ${{ env.SSH_KEY }}
+        wonderland_manifest: dummy-deployment.yaml
+        environment: stage
+        delete: true
+        timeout: 45s

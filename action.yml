@@ -31,6 +31,10 @@ inputs:
     required: false
     description: 'Delete the service instead of deploying it'
     default: 'false'
+  cli_version:
+    required: false
+    description: 'The Wonderland 2 CLI version to use'
+    default: 'v0.3.1'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -42,3 +46,4 @@ runs:
     - ${{ inputs.timeout }}
     - ${{ inputs.delete }}
     - ${{ inputs.workspace }}
+    - ${{ inputs.cli_version }}

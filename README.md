@@ -1,6 +1,7 @@
 # wonderland2-deploy-github-action
 
 A GitHub action to deploy or delete services to Wonderland2.
+Pinned to a known working realease of WL2 CLI, which might not be the latest. See [cli_version parameter](#cli_version).
 
 *For infos how to release a new version have a look at [How to
 release][htr]*
@@ -49,11 +50,17 @@ Currently `stage` or `prod`.
 
 ### delete
 
-set this to `"true"` if you intend to delete the service instead of deploying it 
+set this to `"true"` if you intend to delete the service instead of deploying it
+
+### cli_version
+
+By default the action will use a known working release of WL2 CLI.
+This parameter allows switching to a custom version. Use with caution.
 
 ## How to release
 
 - Choose a new version number
+- Consider updating the default WL2 CLI version
 - Update README example with new version number
 - Go to [draft a new release][dnr]
 - Create the new version number

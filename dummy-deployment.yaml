@@ -1,0 +1,16 @@
+apiVersion: "jimdo.com/v1"
+kind: WonderlandService
+metadata:
+  name: wonderland2-dummy-deployment-gha-test
+spec:
+  scale: 1
+  components:
+    - name: "service"
+      image: "nginx:latest"
+      healthcheck:
+        liveness:
+          port: 80
+          path: /
+
+  notifications:
+    slack: "#dev-null"
