@@ -16,7 +16,7 @@ release][htr]*
 
 ```yaml
 - name: Deploy to Wonderland 2
-  uses: Jimdo/wonderland2-deploy-github-action@v0.2.0
+  uses: Jimdo/wonderland2-deploy-github-action@v0.3.0
   with:
     token: ${{ secrets.WONDERLAND_CI_GITHUB_TOKEN }}
     bastion_key: ${{ secrets.WONDERLAND_CI_SSH_KEY }}
