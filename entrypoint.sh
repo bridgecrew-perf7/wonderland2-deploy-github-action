@@ -53,14 +53,10 @@ if $delete == "true"; then
 else
   log "Deploying $service_name to Wonderland 2"
   wl2 --environment="$environment" kubectl apply -f "$wonderland_manifest"
+
   log "Waiting for service to become available"
-  WAIT_TIME=0
-  until [ $WAIT_TIME -lt 10 ] || wl2 --environment="$environment" kubectl get deployment "$service_name" 2>/dev/null; do
-    sleep $((WAIT_TIME ++))
-    log "waiting ${WAIT_TIME}s for deployment to become available"
-  done
-  if [ "$WAIT_TIME" -lt 10 ]; then
-    wl2 --environment="$environment" kubectl rollout status deploy "$service_name" --timeout="$timeout"
+  # jsonpath condition is supported since kubectl 1.23
+  if wl2 --environment="$environment" kubectl wait --for=jsonpath='{.status.phase}=RUNNING' "WonderlandService/$service_name" --timeout="$timeout"; then
     log "Deployed $service_name to Wonderland 2 successfully"
     log "Getting service status"
     wl2 --environment="$environment" kubectl get ws "$service_name"
