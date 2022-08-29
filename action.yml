@@ -9,7 +9,8 @@ inputs:
     required: true
   bastion_key:
     description: 'Ssh key for authentication in the bastion host'
-    required: true
+    deprecationMessage: 'Specifying a bastion_key is no longer needed.'
+    required: false
   workspace:
     required: false
     description: 'The wonderland environment to deploy your application to (prod|stage)'
@@ -40,7 +41,6 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.token }}
-    - ${{ inputs.bastion_key }}
     - ${{ inputs.environment }}
     - ${{ inputs.wonderland_manifest }}
     - ${{ inputs.timeout }}

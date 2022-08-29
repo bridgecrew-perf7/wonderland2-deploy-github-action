@@ -3,13 +3,12 @@
 set -euo pipefail
 
 token="$1"
-bastion_key="$2"
-environment="$3"
-wonderland_manifest="$4"
-timeout="$5"
-delete="$6"
-workspace="$7"
-cli_version="$8"
+environment="$2"
+wonderland_manifest="$3"
+timeout="$4"
+delete="$5"
+workspace="$6"
+cli_version="$7"
 
 if [ "$workspace" != "prod" ]; then
     echo "Warning: 'workspace' parameter is deprecated please use 'environment' instead" >&2
@@ -26,7 +25,7 @@ function log() {
 
 trap 'rc=$?; log "$rc: There was a problem. Please take a look at https://backstage.jimdex.net/docs/default/component/wonderland2-k8s-operator/How-To/Debug/ for troubleshooting"; exit $rc' ERR
 
-if [ $# -lt 8 ]; then
+if [ $# -lt 7 ]; then
   log "Not enough arguments"
   exit 1
 fi
@@ -37,15 +36,19 @@ curl -L --silent --fail --show-error --output /usr/local/bin/wl2 -H "Authorizati
 chmod +x /usr/local/bin/wl2
 
 log "Setting WONDERLAND_GITHUB_TOKEN"
-export WONDERLAND_GITHUB_TOKEN="$1"
+export WONDERLAND_GITHUB_TOKEN="$token"
+
+log "Getting SSH key"
+vault_token="$(vault login -address="https://vault.jimdo-platform.net" -method=github -no-store token="$token" -format=json | jq .auth.client_token -r)"
+ssh_key=$(VAULT_TOKEN="$vault_token" vault read -field=SSH_KEY secret/github/jimdo-bot)
 
 log "Setting ssh key"
 mkdir -p /root/.ssh/
-echo "$bastion_key" >/root/.ssh/id_rsa
+echo "$ssh_key" >/root/.ssh/id_rsa
 chmod 600 /root/.ssh/id_rsa
 echo "StrictHostKeyChecking no" >/root/.ssh/config
 
-service_name=$(yq eval '.metadata.name' "$4")
+service_name=$(yq eval '.metadata.name' "$wonderland_manifest")
 
 if $delete == "true"; then
   log "Deleting $service_name from Wonderland 2"
