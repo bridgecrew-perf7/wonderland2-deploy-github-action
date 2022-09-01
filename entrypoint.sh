@@ -39,12 +39,12 @@ log "Setting WONDERLAND_GITHUB_TOKEN"
 export WONDERLAND_GITHUB_TOKEN="$token"
 
 log "Getting SSH key"
-vault_token="$(vault login -address="https://vault.jimdo-platform.net" -method=github -no-store token="$token" -format=json | jq .auth.client_token -r)"
-ssh_key=$(VAULT_TOKEN="$vault_token" vault read -field=SSH_KEY secret/github/jimdo-bot)
+eval `wl2 vault --write-token=false read --output env secret/github/jimdo-bot`
 
-log "Setting ssh key"
+log "Setting SSH key"
 mkdir -p /root/.ssh/
-echo "$ssh_key" >/root/.ssh/id_rsa
+echo -e $SSH_KEY >/root/.ssh/id_rsa
+echo -e $SSH_KEY
 chmod 600 /root/.ssh/id_rsa
 echo "StrictHostKeyChecking no" >/root/.ssh/config
 
@@ -55,11 +55,7 @@ if $delete == "true"; then
   wl2 --environment="$environment" kubectl delete -f "$wonderland_manifest"
 else
   log "Deploying $service_name to Wonderland 2"
-  wl2 --environment="$environment" kubectl apply -f "$wonderland_manifest"
-
-  log "Waiting for service to become available"
-  # jsonpath condition is supported since kubectl 1.23
-  if wl2 --environment="$environment" kubectl wait --for=jsonpath='{.status.phase}=RUNNING' "WonderlandService/$service_name" --timeout="$timeout"; then
+  if wl2 --environment="$environment" deploy --timeout="$timeout" -f "$wonderland_manifest"; then
     log "Deployed $service_name to Wonderland 2 successfully"
     log "Getting service status"
     wl2 --environment="$environment" kubectl get ws "$service_name"

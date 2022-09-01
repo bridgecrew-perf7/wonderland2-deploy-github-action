@@ -35,7 +35,7 @@ inputs:
   cli_version:
     required: false
     description: 'The Wonderland 2 CLI version to use'
-    default: 'v0.3.1'
+    default: 'v0.13.0'
 runs:
   using: 'docker'
   image: 'Dockerfile'
