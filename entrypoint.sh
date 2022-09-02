@@ -45,18 +45,14 @@ echo "$bastion_key" >/root/.ssh/id_rsa
 chmod 600 /root/.ssh/id_rsa
 echo "StrictHostKeyChecking no" >/root/.ssh/config
 
-service_name=$(yq eval '.metadata.name' "$4")
+service_name=$(yq eval '.metadata.name' "$wonderland_manifest")
 
 if $delete == "true"; then
   log "Deleting $service_name from Wonderland 2"
   wl2 --environment="$environment" kubectl delete -f "$wonderland_manifest"
 else
   log "Deploying $service_name to Wonderland 2"
-  wl2 --environment="$environment" kubectl apply -f "$wonderland_manifest"
-
-  log "Waiting for service to become available"
-  # jsonpath condition is supported since kubectl 1.23
-  if wl2 --environment="$environment" kubectl wait --for=jsonpath='{.status.phase}=RUNNING' "WonderlandService/$service_name" --timeout="$timeout"; then
+  if wl2 --environment="$environment" deploy --timeout="$timeout" -f "$wonderland_manifest"; then
     log "Deployed $service_name to Wonderland 2 successfully"
     log "Getting service status"
     wl2 --environment="$environment" kubectl get ws "$service_name"
